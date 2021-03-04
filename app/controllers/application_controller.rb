@@ -7,11 +7,12 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/' do
+    binding.pry
     erb :index
   end
 
   post '/login' do
-
+    @user = User.find_by_name
   end
 
   get '/account' do
