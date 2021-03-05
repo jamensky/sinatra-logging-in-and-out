@@ -1,4 +1,5 @@
 require_relative '../../config/environment'
+
 class ApplicationController < Sinatra::Base
   configure do
     set :views, Proc.new { File.join(root, "../views/") }
@@ -7,20 +8,28 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/' do
-    binding.pry
-    erb :index
-  end
+    erb :index   
+  end 
 
-  post '/login' do
-    @user = User.find_by_name
+  post '/login' do #main access point, Helper is for constant user identity confirmation
+    @user = User.find_by(username: params[:username])
+    if @user 
+      session[:user_id] = @user.id
+      redirect '/account'
+     else 
+      erb :error
+    end 
+   
   end
 
   get '/account' do
-
+   @user = User.find_by_id(session[:user_id])
+   erb :account 
   end
 
   get '/logout' do
-
+     session.clear
+     p 'good bye!'
   end
 
 
