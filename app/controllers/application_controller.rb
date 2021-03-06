@@ -13,8 +13,10 @@ class ApplicationController < Sinatra::Base
 
   post '/login' do #main access point, Helper is for constant user identity confirmation
     @user = User.find_by(username: params[:username])
-    if @user 
-      session[:user_id] = @user.id
+
+    if @user && @user.password == params[:password]
+      session[:user_id] = @user.id 
+  
       #binding.pry
       redirect '/account'
      else 
@@ -25,7 +27,6 @@ class ApplicationController < Sinatra::Base
 
   get '/account' do
    @user = User.find_by_id(session[:user_id])
-   binding.pry
    erb :account 
   end
 
